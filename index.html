@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MUDENG — Oprec 2026</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Poppins', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            primary: { 50:'#f0f0ff',100:'#e0e0ff',200:'#c3c3ff',300:'#a5a5ff',400:'#7c6fff',500:'#6c4fff',600:'#5a30f0',700:'#4a22cc',800:'#3d1da6',900:'#351c85' },
+            accent:  { 50:'#edfcf5',100:'#d3f8e6',200:'#abf0d1',300:'#6ee2b3',400:'#35cc8f',500:'#13b577',600:'#0a9161',700:'#097450',800:'#0b5c41',900:'#0c4b37' },
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    /* ===== Mesh Gradient Background ===== */
+    body {
+      background-color: #0a0a1a;
+      overflow-x: hidden;
+    }
+    .mesh-gradient {
+      position: fixed;
+      inset: -50%;
+      width: 200%;
+      height: 200%;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 50% 40% at 20% 30%, rgba(108, 79, 255, 0.35) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 50% at 80% 20%, rgba(19, 181, 119, 0.30) 0%, transparent 55%),
+        radial-gradient(ellipse 45% 35% at 50% 80%, rgba(90, 48, 240, 0.25) 0%, transparent 60%),
+        radial-gradient(ellipse 35% 45% at 70% 60%, rgba(53, 204, 143, 0.22) 0%, transparent 55%),
+        radial-gradient(ellipse 55% 30% at 30% 50%, rgba(124, 111, 255, 0.20) 0%, transparent 50%),
+        radial-gradient(ellipse 30% 60% at 60% 40%, rgba(168, 85, 247, 0.18) 0%, transparent 50%);
+      animation: meshMove 25s ease-in-out infinite;
+    }
+    @keyframes meshMove {
+      0%   { transform: translate(0%, 0%) rotate(0deg) scale(1); filter: hue-rotate(0deg); }
+      15%  { transform: translate(5%, -3%) rotate(3deg) scale(1.05); filter: hue-rotate(12deg); }
+      30%  { transform: translate(-3%, 5%) rotate(-2deg) scale(0.98); filter: hue-rotate(25deg); }
+      45%  { transform: translate(4%, 2%) rotate(4deg) scale(1.03); filter: hue-rotate(-8deg); }
+      60%  { transform: translate(-5%, -2%) rotate(-3deg) scale(1.06); filter: hue-rotate(18deg); }
+      75%  { transform: translate(2%, -4%) rotate(2deg) scale(0.97); filter: hue-rotate(-15deg); }
+      90%  { transform: translate(-2%, 3%) rotate(-1deg) scale(1.02); filter: hue-rotate(8deg); }
+      100% { transform: translate(0%, 0%) rotate(0deg) scale(1); filter: hue-rotate(0deg); }
+    }
+
+    /* ===== Glassmorphism ===== */
+    .glass {
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .glass-card {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.10);
+      transition: all 0.4s cubic-bezier(.4,0,.2,1);
+    }
+    .glass-card:hover {
+      background: rgba(255,255,255,0.09);
+      border-color: rgba(108, 79, 255, 0.35);
+      transform: translateY(-6px);
+      box-shadow: 0 20px 60px rgba(108,79,255,0.15);
+    }
+
+    /* ===== Navbar ===== */
+    .nav-blur {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    /* ===== Dropdown ===== */
+    .dropdown-menu {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(8px) scale(0.97);
+      transition: all 0.25s cubic-bezier(.4,0,.2,1);
+    }
+    .dropdown:hover .dropdown-menu,
+    .dropdown.active .dropdown-menu {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+    }
+
+    /* ===== Modal ===== */
+    .modal-overlay {
+      transition: opacity 0.35s ease, visibility 0.35s ease;
+    }
+    .modal-content {
+      transition: transform 0.35s cubic-bezier(.4,0,.2,1), opacity 0.35s ease;
+    }
+    .modal-overlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+    .modal-overlay.hidden .modal-content {
+      transform: scale(0.92) translateY(24px);
+      opacity: 0;
+    }
+
+    /* ===== Animations ===== */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.7s cubic-bezier(.4,0,.2,1), transform 0.7s cubic-bezier(.4,0,.2,1);
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ===== Custom Scrollbar ===== */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0a0a1a; }
+    ::-webkit-scrollbar-thumb { background: rgba(108,79,255,0.4); border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(108,79,255,0.7); }
+
+    /* ===== Glow Text ===== */
+    .text-glow {
+      text-shadow: 0 0 40px rgba(108,79,255,0.35), 0 0 80px rgba(108,79,255,0.15);
+    }
+
+    /* ===== Step Numbers ===== */
+    .step-number {
+      background: linear-gradient(135deg, #6c4fff, #13b577);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ===== Gradient Border ===== */
+    .gradient-border {
+      position: relative;
+    }
+    .gradient-border::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      padding: 1px;
+      border-radius: inherit;
+      background: linear-gradient(135deg, rgba(108,79,255,0.5), rgba(19,181,119,0.5));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    /* ===== Mobile Menu ===== */
+    .mobile-menu {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(.4,0,.2,1);
+    }
+    .mobile-menu.open {
+      max-height: 800px;
+    }
+
+    /* ===== Floating Particles ===== */
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: float linear infinite;
+    }
+    @keyframes float {
+      0%   { transform: translateY(0) rotate(0deg); opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 1; }
+      100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* ===== Glow Effects ===== */
+    .glow-purple { box-shadow: 0 0 30px rgba(108,79,255,0.3), 0 0 60px rgba(108,79,255,0.1); }
+    .glow-green { box-shadow: 0 0 30px rgba(19,181,119,0.3), 0 0 60px rgba(19,181,119,0.1); }
+    .hero-logo {
+      animation: logoPulse 4s ease-in-out infinite;
+    }
+    @keyframes logoPulse {
+      0%, 100% { filter: drop-shadow(0 0 20px rgba(108,79,255,0.4)); }
+      50% { filter: drop-shadow(0 0 40px rgba(19,181,119,0.5)); }
+    }
+
+    /* ===== Section Divider ===== */
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(108,79,255,0.3), rgba(19,181,119,0.3), transparent);
+    }
+
+    /* ===== Stagger Animation ===== */
+    .stagger-1 { transition-delay: 0.1s; }
+    .stagger-2 { transition-delay: 0.2s; }
+    .stagger-3 { transition-delay: 0.3s; }
+    .stagger-4 { transition-delay: 0.4s; }
+    .stagger-5 { transition-delay: 0.5s; }
+    .stagger-6 { transition-delay: 0.6s; }
+    .stagger-7 { transition-delay: 0.7s; }
+    .stagger-8 { transition-delay: 0.8s; }
+
+    /* ===== Liquid Fill Loader ===== */
+    .loader-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #0a0a1a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.8s cubic-bezier(.4,0,.2,1), visibility 0.8s;
+    }
+    .loader-overlay.fade-out {
+      opacity: 0;
+      visibility: hidden;
+    }
+    .liquid-text-wrapper {
+      position: relative;
+      width: 520px;
+      height: 120px;
+    }
+    @media (max-width: 640px) {
+      .liquid-text-wrapper { width: 320px; height: 80px; }
+    }
+    .liquid-text-wrapper svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+    /* Outline stroke text */
+    .liquid-outline {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.12);
+      stroke-width: 1.5;
+      font-family: 'Poppins', system-ui, sans-serif;
+      font-weight: 900;
+    }
+    /* Filled text clipped by wave */
+    .liquid-fill {
+      fill: #ffffff;
+      font-family: 'Poppins', system-ui, sans-serif;
+      font-weight: 900;
+    }
+    /* Wave path */
+    .liquid-wave {
+      animation: waveMove 2s ease-in-out infinite;
+    }
+    .liquid-wave-back {
+      animation: waveMove 2.5s ease-in-out infinite reverse;
+    }
+    /* Wave rise animation */
+    .liquid-wave-group {
+      animation: waveFill 2.2s cubic-bezier(.4,0,.2,1) forwards;
+    }
+    @keyframes waveFill {
+      20% { transform: translateY(10px); }
+      100% { transform: translateY(-90px); }
+    }
+    @media (max-width: 640px) {
+      @keyframes waveFill {
+        0% { transform: translateY(0px); }
+        100% { transform: translateY(-90px); }
+      }
+    }
+    @keyframes waveMove {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(-50px); }
+    }
+    /* Subtle glow behind text */
+    .liquid-glow {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 300px; height: 150px;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(ellipse, rgba(108,79,255,0.12) 0%, transparent 70%);
+      pointer-events: none;
+      animation: liquidGlow 3s ease-in-out infinite;
+    }
+    @keyframes liquidGlow {
+      0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+      50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+    }
+    /* Drip particles */
+    .liquid-drip {
+      position: absolute;
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.6);
+      animation: dripFall 1.5s ease-in forwards;
+      opacity: 0;
+    }
+    @keyframes dripFall {
+      0% { transform: translateY(0) scale(1); opacity: 0.8; }
+      100% { transform: translateY(60px) scale(0); opacity: 0; }
+    }
+  </style>
+</head>
+<body class="font-sans text-white antialiased">
+
+  <!-- ============ INTRO LOADER ============ -->
+  <div id="introLoader" class="loader-overlay" aria-label="Loading">
+    <div class="liquid-glow"></div>
+    <div class="liquid-text-wrapper">
+      <svg viewBox="0 0 520 120" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <!-- Clip path using the text shape -->
+          <clipPath id="textClip">
+            <text x="50%" y="85" text-anchor="middle" font-size="110" font-family="Poppins, system-ui, sans-serif" font-weight="900" letter-spacing="8">MUDENG</text>
+          </clipPath>
+        </defs>
+
+        <!-- 1) Ghost outline text -->
+        <text class="liquid-outline" x="50%" y="85" text-anchor="middle" font-size="110" letter-spacing="8">MUDENG</text>
+
+        <!-- 2) Liquid fill clipped to text shape -->
+        <g clip-path="url(#textClip)">
+          <g class="liquid-wave-group">
+            <!-- Back wave (slightly different timing) -->
+            <path class="liquid-wave-back" d="M-40,120 Q40,100 120,120 T280,120 T440,120 T600,120 V200 H-40 Z" fill="#00BFFF"/>
+            <!-- Front wave -->
+            <path class="liquid-wave" d="M-40,120 Q30,95 120,120 T280,120 T440,120 T600,120 V200 H-40 Z" fill="#6667E4"/>
+          </g>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Mesh Gradient Background -->
+  <div class="mesh-gradient" aria-hidden="true"></div>
+
+  <!-- ============ NAVBAR ============ -->
+  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 nav-blur transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 lg:h-20">
+        <!-- Logo -->
+        <a href="#beranda" class="flex items-center gap-3 group relative z-10">
+          <img src="img/LogoMark.png" alt="MUDENG" class="w-10 h-10 object-contain shadow-lg shadow-primary-500/25 group-hover:shadow-primary-500/50 transition-shadow" />
+          <span class="font-display font-bold text-xl tracking-tight hidden sm:block">MUDENG</span>
+        </a>
+
+        <!-- Desktop Nav -->
+        <div class="hidden lg:flex items-center gap-1">
+          <a href="#beranda" class="nav-link px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-all">Beranda</a>
+          <a href="#tentang" class="nav-link px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-all">Tentang</a>
+
+          <!-- Dropdown Divisi -->
+          <div class="dropdown relative">
+            <button class="nav-link px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-all flex items-center gap-1.5">
+              Divisi
+              <svg class="w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="dropdown-menu absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 rounded-2xl glass p-2 shadow-2xl shadow-black/40">
+              <a href="divisi-secretary.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-gray-300 hover:text-white hover:bg-white/10 transition-all group">
+                <span class="w-8 h-8 rounded-lg bg-primary-500/15 flex items-center justify-center text-primary-400 group-hover:bg-primary-500/25 transition-colors">📋</span>
+                Secretary
+              </a>
+              <a href="divisi-finance.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-gray-300 hover:text-white hover:bg-white/10 transition-all group">
+                <span class="w-8 h-8 rounded-lg bg-primary-500/15 flex items-center justify-center text-primary-400 group-hover:bg-primary-500/25 transition-colors">💰</span>
+                Finance
+              </a>
+              <a href="divisi-public-relation.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-gray-300 hover:text-white hover:bg-white/10 transition-all group">
+                <span class="w-8 h-8 rounded-lg bg-primary-500/15 flex items-center justify-center text-primary-400 group-hover:bg-primary-500/25 transition-colors">📢</span>
+                Public Relation
+              </a>
+              <a href="divisi-creative-design.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-gray-300 hover:text-white hover:bg-white/10 transition-all group">
+                <span class="w-8 h-8 rounded-lg bg-primary-500/15 flex items-center justify-center text-primary-400 group-hover:bg-primary-500/25 transition-colors">🎨</span>
+                Creative Design
+              </a>
+              <a href="divisi-videography.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-gray-300 hover:text-white hover:bg-white/10 transition-all group">
+                <span class="w-8 h-8 rounded-lg bg-primary-500/15 flex items-center justify-center text-primary-400 group-hover:bg-primary-500/25 transition-colors">🎬</span>
+                Videography
+              </a>
+              <a href="divisi-web-development.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-gray-300 hover:text-white hover:bg-white/10 transition-all group">
+                <span class="w-8 h-8 rounded-lg bg-primary-500/15 flex items-center justify-center text-primary-400 group-hover:bg-primary-500/25 transition-colors">💻</span>
+                Web Development
+              </a>
+              <a href="divisi-event-management.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-gray-300 hover:text-white hover:bg-white/10 transition-all group">
+                <span class="w-8 h-8 rounded-lg bg-primary-500/15 flex items-center justify-center text-primary-400 group-hover:bg-primary-500/25 transition-colors">🎪</span>
+                Event Management
+              </a>
+              <a href="divisi-human-resource.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-gray-300 hover:text-white hover:bg-white/10 transition-all group">
+                <span class="w-8 h-8 rounded-lg bg-primary-500/15 flex items-center justify-center text-primary-400 group-hover:bg-primary-500/25 transition-colors">👥</span>
+                Human Resource
+              </a>
+            </div>
+          </div>
+
+          <a href="#cara-daftar" class="nav-link px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 transition-all">Cara Daftar</a>
+          <button onclick="openModal()" class="ml-3 px-6 py-2.5 rounded-xl bg-gradient-to-r from-primary-500 to-accent-500 text-sm font-semibold text-white shadow-lg shadow-primary-500/25 hover:shadow-primary-500/50 hover:scale-105 active:scale-95 transition-all duration-300">
+            Daftar Sekarang
+          </button>
+        </div>
+
+        <!-- Mobile Menu Toggle -->
+        <button id="menuToggle" class="lg:hidden relative z-10 w-10 h-10 rounded-xl flex items-center justify-center hover:bg-white/10 transition-colors" aria-label="Toggle menu">
+          <div class="flex flex-col gap-1.5" id="hamburgerIcon">
+            <span class="block w-6 h-0.5 bg-white rounded-full transition-all duration-300" id="bar1"></span>
+            <span class="block w-6 h-0.5 bg-white rounded-full transition-all duration-300" id="bar2"></span>
+            <span class="block w-4 h-0.5 bg-white rounded-full transition-all duration-300 ml-auto" id="bar3"></span>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div class="lg:hidden mobile-menu" id="mobileMenu">
+      <div class="px-4 pb-6 pt-2 flex flex-col gap-1 border-t border-white/5">
+        <a href="#beranda" class="mobile-link px-4 py-3 rounded-xl text-gray-300 hover:text-white hover:bg-white/5 transition-all font-medium">Beranda</a>
+        <a href="#tentang" class="mobile-link px-4 py-3 rounded-xl text-gray-300 hover:text-white hover:bg-white/5 transition-all font-medium">Tentang</a>
+
+        <!-- Mobile Divisi Dropdown -->
+        <div>
+          <button onclick="toggleMobileDivisi()" class="w-full flex items-center justify-between px-4 py-3 rounded-xl text-gray-300 hover:text-white hover:bg-white/5 transition-all font-medium">
+            Divisi
+            <svg class="w-4 h-4 transition-transform duration-200" id="mobileDivisiArrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div class="overflow-hidden transition-all duration-300" id="mobileDivisiList" style="max-height:0">
+            <div class="pl-4 flex flex-col gap-0.5 py-1">
+              <a href="divisi-secretary.html" class="px-4 py-2.5 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-white/5 transition-all flex items-center gap-2">📋 Secretary</a>
+              <a href="divisi-finance.html" class="px-4 py-2.5 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-white/5 transition-all flex items-center gap-2">💰 Finance</a>
+              <a href="divisi-public-relation.html" class="px-4 py-2.5 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-white/5 transition-all flex items-center gap-2">📢 Public Relation</a>
+              <a href="divisi-creative-design.html" class="px-4 py-2.5 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-white/5 transition-all flex items-center gap-2">🎨 Creative Design</a>
+              <a href="divisi-videography.html" class="px-4 py-2.5 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-white/5 transition-all flex items-center gap-2">🎬 Videography</a>
+              <a href="divisi-web-development.html" class="px-4 py-2.5 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-white/5 transition-all flex items-center gap-2">💻 Web Development</a>
+              <a href="divisi-event-management.html" class="px-4 py-2.5 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-white/5 transition-all flex items-center gap-2">🎪 Event Management</a>
+              <a href="divisi-human-resource.html" class="px-4 py-2.5 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-white/5 transition-all flex items-center gap-2">👥 Human Resource</a>
+            </div>
+          </div>
+        </div>
+
+        <a href="#cara-daftar" class="mobile-link px-4 py-3 rounded-xl text-gray-300 hover:text-white hover:bg-white/5 transition-all font-medium">Cara Daftar</a>
+        <button onclick="openModal()" class="mt-2 mx-4 px-6 py-3 rounded-xl bg-gradient-to-r from-primary-500 to-accent-500 text-sm font-semibold text-white shadow-lg shadow-primary-500/25 transition-all">
+          Daftar Sekarang
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============ HERO ============ -->
+  <section id="beranda" class="relative z-10 min-h-screen flex items-center justify-center px-4 pt-20">
+    <!-- Floating particles container -->
+    <div id="particles" class="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true"></div>
+
+    <div class="text-center max-w-5xl mx-auto fade-up">
+      <!-- Logo Hero -->
+      <!-- <div class="mb-8">
+        <img src="img/LogoMark.png" alt="MUDENG Logo" class="w-24 h-24 sm:w-28 sm:h-28 mx-auto object-contain hero-logo" />
+      </div> -->
+
+      <!-- Badge -->
+      <div class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full glass text-sm text-gray-300 mb-8 border border-primary-500/20">
+        <span class="w-2 h-2 rounded-full bg-accent-400 animate-pulse"></span>
+        Open Recruitment 2026
+      </div>
+
+      <!-- Heading -->
+      <h1 class="font-display font-black text-5xl sm:text-6xl md:text-7xl lg:text-8xl leading-[1.05] tracking-tight mb-6">
+        <span class="text-glow">Multimedia</span><br />
+        <span class="bg-gradient-to-r from-primary-400 via-accent-400 to-primary-400 bg-clip-text text-transparent bg-[length:200%_auto] animate-[gradient_6s_ease-in-out_infinite]">Digital Engagement</span>
+      </h1>
+
+      <style>
+        @keyframes gradient {
+          0%,100% { background-position: 0% center; }
+          50% { background-position: 100% center; }
+        }
+      </style>
+
+      <!-- Subtitle -->
+      <p class="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+        Bergabunglah bersama kami dalam membangun ekosistem digital kreatif. Wujudkan ide, kembangkan potensi, dan ciptakan dampak nyata bersama <strong class="text-white">MUDENG</strong>.
+      </p>
+
+      <!-- CTA Buttons -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <button onclick="openModal()" class="group px-8 py-4 rounded-2xl bg-gradient-to-r from-primary-500 to-accent-500 text-base font-semibold text-white shadow-xl shadow-primary-500/25 hover:shadow-primary-500/50 hover:scale-105 active:scale-95 transition-all duration-300 flex items-center gap-2">
+          Daftar Sekarang
+          <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+        </button>
+        <a href="#tentang" class="px-8 py-4 rounded-2xl glass text-base font-medium text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-300">
+          Pelajari Lebih Lanjut
+        </a>
+      </div>
+
+      <!-- Stats -->
+      <div class="mt-16 grid grid-cols-3 gap-6 max-w-xl mx-auto">
+        <div class="glass-card rounded-2xl p-5">
+          <div class="font-display font-bold text-3xl sm:text-4xl bg-gradient-to-r from-primary-400 to-accent-400 bg-clip-text text-transparent">8</div>
+          <div class="text-sm text-gray-500 mt-1">Divisi</div>
+        </div>
+        <div class="glass-card rounded-2xl p-5">
+          <div class="font-display font-bold text-3xl sm:text-4xl bg-gradient-to-r from-accent-400 to-primary-400 bg-clip-text text-transparent">50+</div>
+          <div class="text-sm text-gray-500 mt-1">Anggota</div>
+        </div>
+        <div class="glass-card rounded-2xl p-5">
+          <div class="font-display font-bold text-3xl sm:text-4xl bg-gradient-to-r from-primary-400 to-accent-400 bg-clip-text text-transparent">2026</div>
+          <div class="text-sm text-gray-500 mt-1">Periode</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll Indicator -->
+    <!-- <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-gray-500">
+      <span class="text-xs tracking-widest uppercase">Scrollss</span>
+      <div class="w-6 h-10 rounded-full border-2 border-gray-600 flex items-start justify-center p-1.5">
+        <div class="w-1.5 h-1.5 rounded-full bg-gray-400 animate-bounce"></div>
+      </div>
+    </div> -->
+  </section>
+
+  <!-- ============ TENTANG ============ -->
+  <section id="tentang" class="relative z-10 py-24 sm:py-32 px-4">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-16 fade-up">
+        <span class="text-primary-400 font-semibold text-sm tracking-widest uppercase">Tentang Kami</span>
+        <h2 class="font-display font-bold text-3xl sm:text-4xl lg:text-5xl mt-3 mb-6">
+          Apa Itu <span class="bg-gradient-to-r from-primary-400 to-accent-400 bg-clip-text text-transparent">MUDENG</span>?
+        </h2>
+        <p class="text-gray-400 max-w-3xl mx-auto text-lg leading-relaxed">
+          <strong class="text-white">Multimedia Digital Engagement (MUDENG)</strong> adalah organisasi yang berfokus pada pengembangan kompetensi di bidang multimedia dan digital. Kami menghimpun individu-individu kreatif yang memiliki semangat untuk berinovasi di dunia digital, mulai dari desain grafis, videografi, pengembangan web, hingga manajemen acara dan hubungan publik.
+        </p>
+      </div>
+
+      <!-- Features Grid -->
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 fade-up">
+        <div class="glass-card rounded-2xl p-8 relative overflow-hidden group">
+          <div class="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-primary-500/10 blur-2xl group-hover:bg-primary-500/20 group-hover:scale-150 transition-all duration-700"></div>
+          <div class="relative">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-500/20 to-primary-500/5 flex items-center justify-center text-3xl mb-5 group-hover:scale-110 transition-transform">🚀</div>
+            <h3 class="font-display font-semibold text-lg mb-3">Pengembangan Skill</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">Tingkatkan kemampuanmu di berbagai bidang multimedia dan digital melalui program pelatihan dan proyek nyata.</p>
+          </div>
+        </div>
+        <div class="glass-card rounded-2xl p-8 relative overflow-hidden group">
+          <div class="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-accent-500/10 blur-2xl group-hover:bg-accent-500/20 group-hover:scale-150 transition-all duration-700"></div>
+          <div class="relative">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-accent-500/20 to-accent-500/5 flex items-center justify-center text-3xl mb-5 group-hover:scale-110 transition-transform">🤝</div>
+            <h3 class="font-display font-semibold text-lg mb-3">Kolaborasi Tim</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">Bekerja sama dengan tim yang solid dan kreatif untuk menghasilkan karya-karya yang berdampak.</p>
+          </div>
+        </div>
+        <div class="glass-card rounded-2xl p-8 relative overflow-hidden group sm:col-span-2 lg:col-span-1">
+          <div class="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-primary-500/10 blur-2xl group-hover:bg-primary-500/20 group-hover:scale-150 transition-all duration-700"></div>
+          <div class="relative">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-500/20 to-accent-500/5 flex items-center justify-center text-3xl mb-5 group-hover:scale-110 transition-transform">🌟</div>
+            <h3 class="font-display font-semibold text-lg mb-3">Pengalaman Nyata</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">Dapatkan pengalaman langsung dalam mengelola proyek dan event berskala besar.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ VISI & MISI ============ -->
+  <section id="visi-misi" class="relative z-10 py-24 sm:py-32 px-4">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-16 fade-up">
+        <span class="text-primary-400 font-semibold text-sm tracking-widest uppercase">Tujuan Kami</span>
+        <h2 class="font-display font-bold text-3xl sm:text-4xl lg:text-5xl mt-3 mb-6">
+          Visi & <span class="bg-gradient-to-r from-primary-400 to-accent-400 bg-clip-text text-transparent">Misi</span>
+        </h2>
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-8 fade-up">
+        <!-- Visi -->
+        <div class="glass-card rounded-3xl p-8 sm:p-10 relative overflow-hidden group">
+          <div class="absolute -top-6 -right-6 w-32 h-32 rounded-full bg-gradient-to-br from-primary-500/20 to-transparent blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
+          <div class="relative">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500/20 to-primary-500/5 flex items-center justify-center text-4xl mb-6">🔭</div>
+            <h3 class="font-display font-bold text-2xl sm:text-3xl mb-4 bg-gradient-to-r from-primary-400 to-accent-400 bg-clip-text text-transparent">Visi Kami</h3>
+            <p class="text-gray-300 text-lg leading-relaxed">
+              Menjadi wadah belajar kreatifitas yang berkelanjutan seputar Multimedia agar menghasilkan sumber daya yang kreatif juga produk kreatif dan berkelanjutan.
+            </p>
+          </div>
+        </div>
+
+        <!-- Misi -->
+        <div class="glass-card rounded-3xl p-8 sm:p-10 relative overflow-hidden group">
+          <div class="absolute -top-6 -right-6 w-32 h-32 rounded-full bg-gradient-to-br from-accent-500/20 to-transparent blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
+          <div class="relative">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent-500/20 to-accent-500/5 flex items-center justify-center text-4xl mb-6">🎯</div>
+            <h3 class="font-display font-bold text-2xl sm:text-3xl mb-6 bg-gradient-to-r from-accent-400 to-primary-400 bg-clip-text text-transparent">Misi Kami</h3>
+            <ul class="space-y-5">
+              <li class="flex items-start gap-4">
+                <span class="mt-1 w-8 h-8 min-w-[2rem] rounded-xl bg-gradient-to-br from-accent-500/20 to-primary-500/10 flex items-center justify-center text-sm font-bold text-accent-400">1</span>
+                <p class="text-gray-300 leading-relaxed">Membangun tipikal belajar yang berkelanjutan yaitu berfokus kepada 1 keterampilan hingga member bisa menguasai 1 keterampilan tersebut.</p>
+              </li>
+              <li class="flex items-start gap-4">
+                <span class="mt-1 w-8 h-8 min-w-[2rem] rounded-xl bg-gradient-to-br from-accent-500/20 to-primary-500/10 flex items-center justify-center text-sm font-bold text-accent-400">2</span>
+                <p class="text-gray-300 leading-relaxed">Membantu member membangun personal branding kreatif melalui pembelajaran di MUDENG.</p>
+              </li>
+              <li class="flex items-start gap-4">
+                <span class="mt-1 w-8 h-8 min-w-[2rem] rounded-xl bg-gradient-to-br from-accent-500/20 to-primary-500/10 flex items-center justify-center text-sm font-bold text-accent-400">3</span>
+                <p class="text-gray-300 leading-relaxed">Memperluas jaringan secara individu maupun kerja sama dengan komunitas kampus serta industri kreatif.</p>
+              </li>
+              <li class="flex items-start gap-4">
+                <span class="mt-1 w-8 h-8 min-w-[2rem] rounded-xl bg-gradient-to-br from-accent-500/20 to-primary-500/10 flex items-center justify-center text-sm font-bold text-accent-400">4</span>
+                <p class="text-gray-300 leading-relaxed">Mengoptimalkan penggunaan media digital untuk memperkenalkan hasil karya dan meningkatkan eksistensi organisasi.</p>
+              </li>
+              <li class="flex items-start gap-4">
+                <span class="mt-1 w-8 h-8 min-w-[2rem] rounded-xl bg-gradient-to-br from-accent-500/20 to-primary-500/10 flex items-center justify-center text-sm font-bold text-accent-400">5</span>
+                <p class="text-gray-300 leading-relaxed">Membangun internal yang aktif serta team work yang terorganisir.</p>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DIVISI OVERVIEW ============ -->
+  <section class="relative z-10 py-24 sm:py-32 px-4">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-16 fade-up">
+        <span class="text-accent-400 font-semibold text-sm tracking-widest uppercase">Divisi Kami</span>
+        <h2 class="font-display font-bold text-3xl sm:text-4xl lg:text-5xl mt-3 mb-6">
+          Temukan <span class="bg-gradient-to-r from-accent-400 to-primary-400 bg-clip-text text-transparent">Divisi</span> yang Cocok
+        </h2>
+        <p class="text-gray-400 max-w-2xl mx-auto text-lg">Kami memiliki 8 divisi yang masing-masing memiliki peran vital dalam menjalankan organisasi.</p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 fade-up">
+        <!-- Secretary -->
+        <a href="divisi-secretary.html" class="glass-card rounded-2xl p-6 text-center group cursor-pointer relative overflow-hidden stagger-1">
+          <div class="absolute inset-0 bg-gradient-to-br from-primary-500/0 to-accent-500/0 group-hover:from-primary-500/5 group-hover:to-accent-500/5 transition-all duration-500"></div>
+          <div class="relative">
+            <div class="text-4xl mb-4 group-hover:scale-125 transition-transform duration-300">📋</div>
+            <h3 class="font-display font-semibold mb-2 group-hover:text-primary-400 transition-colors">Secretary</h3>
+            <p class="text-gray-500 text-sm">Dokumentasi & Surat Menyurat</p>
+            <div class="mt-4 text-xs font-medium text-primary-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">Pelajari &rarr;</div>
+          </div>
+        </a>
+        <!-- Finance -->
+        <a href="divisi-finance.html" class="glass-card rounded-2xl p-6 text-center group cursor-pointer relative overflow-hidden stagger-2">
+          <div class="absolute inset-0 bg-gradient-to-br from-primary-500/0 to-accent-500/0 group-hover:from-primary-500/5 group-hover:to-accent-500/5 transition-all duration-500"></div>
+          <div class="relative">
+            <div class="text-4xl mb-4 group-hover:scale-125 transition-transform duration-300">💰</div>
+            <h3 class="font-display font-semibold mb-2 group-hover:text-primary-400 transition-colors">Finance</h3>
+            <p class="text-gray-500 text-sm">Keuangan & Anggaran</p>
+            <div class="mt-4 text-xs font-medium text-primary-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">Pelajari &rarr;</div>
+          </div>
+        </a>
+        <!-- Public Relation -->
+        <a href="divisi-public-relation.html" class="glass-card rounded-2xl p-6 text-center group cursor-pointer relative overflow-hidden stagger-3">
+          <div class="absolute inset-0 bg-gradient-to-br from-primary-500/0 to-accent-500/0 group-hover:from-primary-500/5 group-hover:to-accent-500/5 transition-all duration-500"></div>
+          <div class="relative">
+            <div class="text-4xl mb-4 group-hover:scale-125 transition-transform duration-300">📢</div>
+            <h3 class="font-display font-semibold mb-2 group-hover:text-primary-400 transition-colors">Public Relation</h3>
+            <p class="text-gray-500 text-sm">Hubungan Publik & Kemitraan</p>
+            <div class="mt-4 text-xs font-medium text-primary-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">Pelajari &rarr;</div>
+          </div>
+        </a>
+        <!-- Creative Design -->
+        <a href="divisi-creative-design.html" class="glass-card rounded-2xl p-6 text-center group cursor-pointer relative overflow-hidden stagger-4">
+          <div class="absolute inset-0 bg-gradient-to-br from-primary-500/0 to-accent-500/0 group-hover:from-primary-500/5 group-hover:to-accent-500/5 transition-all duration-500"></div>
+          <div class="relative">
+            <div class="text-4xl mb-4 group-hover:scale-125 transition-transform duration-300">🎨</div>
+            <h3 class="font-display font-semibold mb-2 group-hover:text-primary-400 transition-colors">Creative Design</h3>
+            <p class="text-gray-500 text-sm">Desain Visual & Branding</p>
+            <div class="mt-4 text-xs font-medium text-primary-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">Pelajari &rarr;</div>
+          </div>
+        </a>
+        <!-- Videography -->
+        <a href="divisi-videography.html" class="glass-card rounded-2xl p-6 text-center group cursor-pointer relative overflow-hidden stagger-5">
+          <div class="absolute inset-0 bg-gradient-to-br from-primary-500/0 to-accent-500/0 group-hover:from-primary-500/5 group-hover:to-accent-500/5 transition-all duration-500"></div>
+          <div class="relative">
+            <div class="text-4xl mb-4 group-hover:scale-125 transition-transform duration-300">🎬</div>
+            <h3 class="font-display font-semibold mb-2 group-hover:text-primary-400 transition-colors">Videography</h3>
+            <p class="text-gray-500 text-sm">Produksi & Editing Video</p>
+            <div class="mt-4 text-xs font-medium text-primary-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">Pelajari &rarr;</div>
+          </div>
+        </a>
+        <!-- Web Development -->
+        <a href="divisi-web-development.html" class="glass-card rounded-2xl p-6 text-center group cursor-pointer relative overflow-hidden stagger-6">
+          <div class="absolute inset-0 bg-gradient-to-br from-primary-500/0 to-accent-500/0 group-hover:from-primary-500/5 group-hover:to-accent-500/5 transition-all duration-500"></div>
+          <div class="relative">
+            <div class="text-4xl mb-4 group-hover:scale-125 transition-transform duration-300">💻</div>
+            <h3 class="font-display font-semibold mb-2 group-hover:text-primary-400 transition-colors">Web Development</h3>
+            <p class="text-gray-500 text-sm">Pengembangan Website</p>
+            <div class="mt-4 text-xs font-medium text-primary-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">Pelajari &rarr;</div>
+          </div>
+        </a>
+        <!-- Event Management -->
+        <a href="divisi-event-management.html" class="glass-card rounded-2xl p-6 text-center group cursor-pointer relative overflow-hidden stagger-7">
+          <div class="absolute inset-0 bg-gradient-to-br from-primary-500/0 to-accent-500/0 group-hover:from-primary-500/5 group-hover:to-accent-500/5 transition-all duration-500"></div>
+          <div class="relative">
+            <div class="text-4xl mb-4 group-hover:scale-125 transition-transform duration-300">🎪</div>
+            <h3 class="font-display font-semibold mb-2 group-hover:text-primary-400 transition-colors">Event Management</h3>
+            <p class="text-gray-500 text-sm">Perencanaan & Eksekusi Acara</p>
+            <div class="mt-4 text-xs font-medium text-primary-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">Pelajari &rarr;</div>
+          </div>
+        </a>
+        <!-- Human Resource -->
+        <a href="divisi-human-resource.html" class="glass-card rounded-2xl p-6 text-center group cursor-pointer relative overflow-hidden stagger-8">
+          <div class="absolute inset-0 bg-gradient-to-br from-primary-500/0 to-accent-500/0 group-hover:from-primary-500/5 group-hover:to-accent-500/5 transition-all duration-500"></div>
+          <div class="relative">
+            <div class="text-4xl mb-4 group-hover:scale-125 transition-transform duration-300">👥</div>
+            <h3 class="font-display font-semibold mb-2 group-hover:text-primary-400 transition-colors">Human Resource</h3>
+            <p class="text-gray-500 text-sm">Manajemen Sumber Daya</p>
+            <div class="mt-4 text-xs font-medium text-primary-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">Pelajari &rarr;</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SYARAT & KETENTUAN ============ -->
+  <section id="syarat" class="relative z-10 py-24 sm:py-32 px-4">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center mb-16 fade-up">
+        <span class="text-primary-400 font-semibold text-sm tracking-widest uppercase">Pendaftaran</span>
+        <h2 class="font-display font-bold text-3xl sm:text-4xl lg:text-5xl mt-3 mb-6">
+          Syarat & <span class="bg-gradient-to-r from-primary-400 to-accent-400 bg-clip-text text-transparent">Ketentuan</span>
+        </h2>
+      </div>
+
+      <div class="glass-card rounded-3xl p-8 sm:p-12 fade-up">
+        <ul class="space-y-5">
+          <li class="flex items-start gap-4">
+            <span class="mt-1 w-6 h-6 min-w-[1.5rem] rounded-full bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-xs font-bold">1</span>
+            <p class="text-gray-300 leading-relaxed">Merupakan mahasiswa aktif yang terdaftar di universitas pada periode 2025/2026.</p>
+          </li>
+          <li class="flex items-start gap-4">
+            <span class="mt-1 w-6 h-6 min-w-[1.5rem] rounded-full bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-xs font-bold">2</span>
+            <p class="text-gray-300 leading-relaxed">Memiliki minat dan motivasi yang tinggi di bidang multimedia dan digital.</p>
+          </li>
+          <li class="flex items-start gap-4">
+            <span class="mt-1 w-6 h-6 min-w-[1.5rem] rounded-full bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-xs font-bold">3</span>
+            <p class="text-gray-300 leading-relaxed">Bersedia mengikuti seluruh rangkaian seleksi dan kegiatan organisasi.</p>
+          </li>
+          <li class="flex items-start gap-4">
+            <span class="mt-1 w-6 h-6 min-w-[1.5rem] rounded-full bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-xs font-bold">4</span>
+            <p class="text-gray-300 leading-relaxed">Mampu bekerja sama dalam tim dan memiliki kemampuan komunikasi yang baik.</p>
+          </li>
+          <li class="flex items-start gap-4">
+            <span class="mt-1 w-6 h-6 min-w-[1.5rem] rounded-full bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-xs font-bold">5</span>
+            <p class="text-gray-300 leading-relaxed">Menyertakan CV (Curriculum Vitae) yang sesuai dengan divisi yang dituju.</p>
+          </li>
+          <li class="flex items-start gap-4">
+            <span class="mt-1 w-6 h-6 min-w-[1.5rem] rounded-full bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-xs font-bold">6</span>
+            <p class="text-gray-300 leading-relaxed">Pendaftaran hanya dapat dilakukan melalui formulir resmi yang tersedia di website ini.</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CARA DAFTAR ============ -->
+  <section id="cara-daftar" class="relative z-10 py-24 sm:py-32 px-4">
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center mb-16 fade-up">
+        <span class="text-accent-400 font-semibold text-sm tracking-widest uppercase">Panduan</span>
+        <h2 class="font-display font-bold text-3xl sm:text-4xl lg:text-5xl mt-3 mb-6">
+          Langkah-Langkah <span class="bg-gradient-to-r from-accent-400 to-primary-400 bg-clip-text text-transparent">Mendaftar</span>
+        </h2>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8 fade-up">
+        <!-- Step 1 -->
+        <div class="glass-card rounded-3xl p-8 relative overflow-hidden group">
+          <div class="absolute top-6 right-6 step-number font-display font-black text-7xl opacity-20 group-hover:opacity-40 transition-opacity">01</div>
+          <div class="relative">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-xl mb-5">🔍</div>
+            <h3 class="font-display font-bold text-xl mb-3">Cari Tau Apa Itu Mudeng?</h3>
+            <p class="text-gray-400 leading-relaxed">Kenali organisasi MUDENG lebih dalam. Pelajari visi, misi, dan budaya kerja kami melalui bagian <em class="text-primary-400">Tentang</em> di halaman ini.</p>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="glass-card rounded-3xl p-8 relative overflow-hidden group">
+          <div class="absolute top-6 right-6 step-number font-display font-black text-7xl opacity-20 group-hover:opacity-40 transition-opacity">02</div>
+          <div class="relative">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-xl mb-5">📖</div>
+            <h3 class="font-display font-bold text-xl mb-3">Simak Informasi Divisi</h3>
+            <p class="text-gray-400 leading-relaxed">Pelajari setiap divisi melalui menu <em class="text-accent-400">Divisi</em> di navigasi. Temukan divisi yang paling sesuai dengan minat dan keahlianmu.</p>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="glass-card rounded-3xl p-8 relative overflow-hidden group">
+          <div class="absolute top-6 right-6 step-number font-display font-black text-7xl opacity-20 group-hover:opacity-40 transition-opacity">03</div>
+          <div class="relative">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-xl mb-5">📄</div>
+            <h3 class="font-display font-bold text-xl mb-3">Siapkan CV</h3>
+            <p class="text-gray-400 leading-relaxed">Buat CV yang sesuai dengan divisi yang kamu tuju. Tonjolkan skill, pengalaman, dan portofolio yang relevan.</p>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="glass-card rounded-3xl p-8 relative overflow-hidden group">
+          <div class="absolute top-6 right-6 step-number font-display font-black text-7xl opacity-20 group-hover:opacity-40 transition-opacity">04</div>
+          <div class="relative">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-xl mb-5">🚀</div>
+            <h3 class="font-display font-bold text-xl mb-3">Langsung Daftar!</h3>
+            <p class="text-gray-400 leading-relaxed">Jika semua sudah siap, klik tombol <em class="text-primary-400">Daftar Sekarang</em> dan isi formulir pendaftaran. Jangan sampai terlewat!</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="text-center mt-12 fade-up">
+        <button onclick="openModal()" class="group px-10 py-4 rounded-2xl bg-gradient-to-r from-primary-500 to-accent-500 text-base font-semibold text-white shadow-xl shadow-primary-500/25 hover:shadow-primary-500/50 hover:scale-105 active:scale-95 transition-all duration-300 inline-flex items-center gap-2">
+          Daftar Sekarang
+          <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="relative z-10 border-t border-white/5 py-12 px-4">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500">
+      <div class="flex items-center gap-3">
+        <img src="img/LogoMark.png" alt="MUDENG" class="w-8 h-8 rounded-lg object-contain" />
+        <span>&copy; 2026 MUDENG. All rights reserved.</span>
+      </div>
+      <div class="flex items-center gap-6">
+        <a href="#beranda" class="hover:text-white transition-colors">Beranda</a>
+        <a href="#tentang" class="hover:text-white transition-colors">Tentang</a>
+        <a href="#visi-misi" class="hover:text-white transition-colors">Visi & Misi</a>
+        <a href="#cara-daftar" class="hover:text-white transition-colors">Cara Daftar</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============ MODAL PENDAFTARAN ============ -->
+  <div id="registrationModal" class="modal-overlay hidden fixed inset-0 z-[100] flex items-center justify-center p-4" role="dialog" aria-modal="true">
+    <!-- Backdrop -->
+    <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeModal()"></div>
+
+    <!-- Modal Content -->
+    <div class="modal-content relative w-full max-w-2xl max-h-[90vh] rounded-3xl glass overflow-hidden shadow-2xl">
+      <!-- Header -->
+      <div class="flex items-center justify-between px-6 sm:px-8 py-5 border-b border-white/10">
+        <div>
+          <h3 class="font-display font-bold text-xl">Formulir Pendaftaran</h3>
+          <p class="text-gray-400 text-sm mt-0.5">Open Recruitment MUDENG 2026</p>
+        </div>
+        <button onclick="closeModal()" class="w-10 h-10 rounded-xl hover:bg-white/10 flex items-center justify-center transition-colors group" aria-label="Tutup modal">
+          <svg class="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Google Form Embed -->
+      <div class="relative w-full h-[80vh] rounded-2xl overflow-hidden">
+        <iframe
+          src="https://docs.google.com/forms/d/e/1FAIpQLSePjAjSNn9IwKB2MRh88TqD2qaKzNWX8InbnkbAvfC7EsR-Pw/viewform?usp=header"
+          width="100%"
+          height="100%"
+          frameborder="0"
+          marginheight="0"
+          marginwidth="0"
+          class="absolute top-0 left-0 w-full h-full rounded-2xl"
+          title="Formulir Pendaftaran MUDENG"
+        >Memuat formulir</iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ JAVASCRIPT ============ -->
+  <script>
+    // ===== Mobile Menu =====
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const bar1 = document.getElementById('bar1');
+    const bar2 = document.getElementById('bar2');
+    const bar3 = document.getElementById('bar3');
+    let menuOpen = false;
+
+    menuToggle.addEventListener('click', () => {
+      menuOpen = !menuOpen;
+      mobileMenu.classList.toggle('open', menuOpen);
+      if (menuOpen) {
+        bar1.style.transform = 'rotate(45deg) translateY(8px)';
+        bar2.style.opacity = '0';
+        bar3.style.transform = 'rotate(-45deg) translateY(-8px)';
+        bar3.style.width = '1.5rem';
+        bar3.style.marginLeft = '0';
+      } else {
+        bar1.style.transform = '';
+        bar2.style.opacity = '';
+        bar3.style.transform = '';
+        bar3.style.width = '';
+        bar3.style.marginLeft = '';
+      }
+    });
+
+    // Close mobile menu on link click
+    document.querySelectorAll('.mobile-link').forEach(link => {
+      link.addEventListener('click', () => {
+        menuOpen = false;
+        mobileMenu.classList.remove('open');
+        bar1.style.transform = '';
+        bar2.style.opacity = '';
+        bar3.style.transform = '';
+        bar3.style.width = '';
+        bar3.style.marginLeft = '';
+      });
+    });
+
+    // ===== Mobile Divisi Dropdown =====
+    function toggleMobileDivisi() {
+      const list = document.getElementById('mobileDivisiList');
+      const arrow = document.getElementById('mobileDivisiArrow');
+      if (list.style.maxHeight === '0px' || list.style.maxHeight === '') {
+        list.style.maxHeight = '500px';
+        arrow.style.transform = 'rotate(180deg)';
+      } else {
+        list.style.maxHeight = '0px';
+        arrow.style.transform = '';
+      }
+    }
+
+    // ===== Modal =====
+    function openModal() {
+      const modal = document.getElementById('registrationModal');
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      // Close mobile menu if open
+      if (menuOpen) {
+        menuOpen = false;
+        mobileMenu.classList.remove('open');
+        bar1.style.transform = '';
+        bar2.style.opacity = '';
+        bar3.style.transform = '';
+        bar3.style.width = '';
+        bar3.style.marginLeft = '';
+      }
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('registrationModal');
+      modal.classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // ===== Scroll Animations (Intersection Observer) =====
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.5, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // ===== Navbar Active State =====
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-link');
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY + 100;
+      sections.forEach(section => {
+        const top = section.offsetTop;
+        const height = section.offsetHeight;
+        const id = section.getAttribute('id');
+        if (scrollY >= top && scrollY < top + height) {
+          navLinks.forEach(link => {
+            link.classList.remove('text-white', 'bg-white/5');
+            if (link.getAttribute('href') === '#' + id) {
+              link.classList.add('text-white', 'bg-white/5');
+            }
+          });
+        }
+      });
+    });
+
+    // ===== Floating Particles =====
+    function createParticles() {
+      const container = document.getElementById('particles');
+      const colors = ['rgba(108,79,255,0.4)', 'rgba(19,181,119,0.3)', 'rgba(124,111,255,0.3)'];
+      for (let i = 0; i < 20; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        const size = Math.random() * 4 + 2;
+        particle.style.width = size + 'px';
+        particle.style.height = size + 'px';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.bottom = '-10px';
+        particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+        particle.style.animationDuration = (Math.random() * 15 + 10) + 's';
+        particle.style.animationDelay = (Math.random() * 15) + 's';
+        container.appendChild(particle);
+      }
+    }
+    createParticles();
+
+    // ===== Intro Loader =====
+    window.addEventListener('load', () => {
+      const loader = document.getElementById('introLoader');
+      if (!loader) return;
+      // Create drip particles along the text
+      function createDrips() {
+        const wrapper = loader.querySelector('.liquid-text-wrapper');
+        if (!wrapper) return;
+        const rect = wrapper.getBoundingClientRect();
+        for (let i = 0; i < 8; i++) {
+          const drip = document.createElement('div');
+          drip.className = 'liquid-drip';
+          drip.style.left = (rect.left + Math.random() * rect.width) + 'px';
+          drip.style.top = (rect.top + rect.height * 0.6 + Math.random() * 20) + 'px';
+          drip.style.animationDelay = (0.8 + Math.random() * 1.2) + 's';
+          drip.style.width = (3 + Math.random() * 3) + 'px';
+          drip.style.height = drip.style.width;
+          loader.appendChild(drip);
+        }
+      }
+      setTimeout(createDrips, 600);
+      // Fade out after animation completes
+      setTimeout(() => {
+        loader.classList.add('fade-out');
+        loader.addEventListener('transitionend', () => loader.remove());
+      }, 2800);
+    });
+  </script>
+</body>
+</html>
