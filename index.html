@@ -223,7 +223,6 @@
           class="px-8 py-4 rounded-2xl glass text-base font-medium text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-300">Pelajari
           Lebih Lanjut</a>
       </div>
-<<<<<<< HEAD
       <div class="mt-16 grid grid-cols-3 gap-6 max-w-xl mx-auto" data-parallax="0.04">
         <div class="glass-card rounded-2xl p-5 stat-card">
           <div
@@ -241,21 +240,6 @@
           <div
             class="font-display font-bold text-2xl sm:text-4xl bg-gradient-to-r from-primary-400 to-accent-400 bg-clip-text text-transparent"
             data-counter="2026">0</div>
-=======
-
-      <!-- Stats -->
-      <div class="mt-16 grid grid-cols-3 gap-6 max-w-xl mx-auto">
-        <div class="glass-card rounded-2xl p-5">
-          <div class="font-display font-bold text-2xl sm:text-4xl bg-gradient-to-r from-primary-400 to-accent-400 bg-clip-text text-transparent">8</div>
-          <div class="text-sm text-gray-500 mt-1">Divisi</div>
-        </div>
-        <div class="glass-card rounded-2xl p-5">
-          <div class="font-display font-bold text-2xl sm:text-4xl bg-gradient-to-r from-accent-400 to-primary-400 bg-clip-text text-transparent">50+</div>
-          <div class="text-sm text-gray-500 mt-1">Anggota</div>
-        </div>
-        <div class="glass-card rounded-2xl p-5">
-          <div class="font-display font-bold text-2xl sm:text-4xl bg-gradient-to-r from-primary-400 to-accent-400 bg-clip-text text-transparent">2026</div>
->>>>>>> f9a927edd45a2212e560794da4e40d77be4c7b9b
           <div class="text-sm text-gray-500 mt-1">Periode</div>
         </div>
       </div>
@@ -748,7 +732,7 @@
   <div id="registrationModal" class="modal-overlay hidden fixed inset-0 z-[100] flex items-center justify-center p-4"
     role="dialog" aria-modal="true">
     <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeModal()"></div>
-    <div class="modal-content relative w-full max-w-2xl max-h-[90vh] rounded-3xl glass overflow-hidden shadow-2xl">
+    <div class="modal-content relative w-full max-w-2xl max-h-[100vh] rounded-3xl glass overflow-hidden shadow-2xl">
       <div class="flex items-center justify-between px-6 sm:px-8 py-5 border-b border-white/10">
         <div>
           <h3 class="font-display font-bold text-xl">Formulir Pendaftaran</h3>
@@ -769,171 +753,7 @@
     </div>
   </div>
 
-<<<<<<< HEAD
   <script src="js/main.js"></script>
-=======
-  <!-- ============ JAVASCRIPT ============ -->
-  <script>
-    // ===== Mobile Menu =====
-    const menuToggle = document.getElementById('menuToggle');
-    const mobileMenu = document.getElementById('mobileMenu');
-    const bar1 = document.getElementById('bar1');
-    const bar2 = document.getElementById('bar2');
-    const bar3 = document.getElementById('bar3');
-    let menuOpen = false;
-
-    menuToggle.addEventListener('click', () => {
-      menuOpen = !menuOpen;
-      mobileMenu.classList.toggle('open', menuOpen);
-      if (menuOpen) {
-        bar1.style.transform = 'rotate(45deg) translateY(8px)';
-        bar2.style.opacity = '0';
-        bar3.style.transform = 'rotate(-45deg) translateY(-8px)';
-        bar3.style.width = '1.5rem';
-        bar3.style.marginLeft = '0';
-      } else {
-        bar1.style.transform = '';
-        bar2.style.opacity = '';
-        bar3.style.transform = '';
-        bar3.style.width = '';
-        bar3.style.marginLeft = '';
-      }
-    });
-
-    // Close mobile menu on link click
-    document.querySelectorAll('.mobile-link').forEach(link => {
-      link.addEventListener('click', () => {
-        menuOpen = false;
-        mobileMenu.classList.remove('open');
-        bar1.style.transform = '';
-        bar2.style.opacity = '';
-        bar3.style.transform = '';
-        bar3.style.width = '';
-        bar3.style.marginLeft = '';
-      });
-    });
-
-    // ===== Mobile Divisi Dropdown =====
-    function toggleMobileDivisi() {
-      const list = document.getElementById('mobileDivisiList');
-      const arrow = document.getElementById('mobileDivisiArrow');
-      if (list.style.maxHeight === '0px' || list.style.maxHeight === '') {
-        list.style.maxHeight = '500px';
-        arrow.style.transform = 'rotate(180deg)';
-      } else {
-        list.style.maxHeight = '0px';
-        arrow.style.transform = '';
-      }
-    }
-
-    // ===== Modal =====
-    function openModal() {
-      const modal = document.getElementById('registrationModal');
-      modal.classList.remove('hidden');
-      document.body.style.overflow = 'hidden';
-      // Close mobile menu if open
-      if (menuOpen) {
-        menuOpen = false;
-        mobileMenu.classList.remove('open');
-        bar1.style.transform = '';
-        bar2.style.opacity = '';
-        bar3.style.transform = '';
-        bar3.style.width = '';
-        bar3.style.marginLeft = '';
-      }
-    }
-
-    function closeModal() {
-      const modal = document.getElementById('registrationModal');
-      modal.classList.add('hidden');
-      document.body.style.overflow = '';
-    }
-
-    // Close modal on Escape key
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeModal();
-    });
-
-    // ===== Scroll Animations (Intersection Observer) =====
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
-
-    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
-
-    // ===== Navbar Active State =====
-    const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('.nav-link');
-    window.addEventListener('scroll', () => {
-      const scrollY = window.scrollY + 100;
-      sections.forEach(section => {
-        const top = section.offsetTop;
-        const height = section.offsetHeight;
-        const id = section.getAttribute('id');
-        if (scrollY >= top && scrollY < top + height) {
-          navLinks.forEach(link => {
-            link.classList.remove('text-white', 'bg-white/5');
-            if (link.getAttribute('href') === '#' + id) {
-              link.classList.add('text-white', 'bg-white/5');
-            }
-          });
-        }
-      });
-    });
-
-    // ===== Floating Particles =====
-    function createParticles() {
-      const container = document.getElementById('particles');
-      const colors = ['rgba(108,79,255,0.4)', 'rgba(19,181,119,0.3)', 'rgba(124,111,255,0.3)'];
-      for (let i = 0; i < 20; i++) {
-        const particle = document.createElement('div');
-        particle.classList.add('particle');
-        const size = Math.random() * 4 + 2;
-        particle.style.width = size + 'px';
-        particle.style.height = size + 'px';
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.bottom = '-10px';
-        particle.style.background = colors[Math.floor(Math.random() * colors.length)];
-        particle.style.animationDuration = (Math.random() * 15 + 10) + 's';
-        particle.style.animationDelay = (Math.random() * 15) + 's';
-        container.appendChild(particle);
-      }
-    }
-    createParticles();
-
-    // ===== Intro Loader =====
-    window.addEventListener('load', () => {
-      const loader = document.getElementById('introLoader');
-      if (!loader) return;
-      // Create drip particles along the text
-      function createDrips() {
-        const wrapper = loader.querySelector('.liquid-text-wrapper');
-        if (!wrapper) return;
-        const rect = wrapper.getBoundingClientRect();
-        for (let i = 0; i < 8; i++) {
-          const drip = document.createElement('div');
-          drip.className = 'liquid-drip';
-          drip.style.left = (rect.left + Math.random() * rect.width) + 'px';
-          drip.style.top = (rect.top + rect.height * 0.6 + Math.random() * 20) + 'px';
-          drip.style.animationDelay = (0.8 + Math.random() * 1.2) + 's';
-          drip.style.width = (3 + Math.random() * 3) + 'px';
-          drip.style.height = drip.style.width;
-          loader.appendChild(drip);
-        }
-      }
-      setTimeout(createDrips, 600);
-      // Fade out after animation completes
-      setTimeout(() => {
-        loader.classList.add('fade-out');
-        loader.addEventListener('transitionend', () => loader.remove());
-      }, 2800);
-    });
-  </script>
->>>>>>> f9a927edd45a2212e560794da4e40d77be4c7b9b
 </body>
 
 </html>

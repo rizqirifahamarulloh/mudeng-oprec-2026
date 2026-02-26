@@ -321,3 +321,27 @@
   window.addEventListener('load', handleIntroLoader);
 
 })();
+
+document.addEventListener('DOMContentLoaded', function () {
+  const currentUrl = window.location.href
+  const desktopLinks = document.querySelectorAll('.dropdown-menu a')
+  const mobileLinks = document.querySelectorAll('#mobileDivisiList a')
+
+  desktopLinks.forEach(link => {
+    link.classList.remove('text-white', 'bg-white/10')
+    link.classList.add('text-gray-300')
+    if (link.href === currentUrl) {
+      link.classList.remove('text-gray-300')
+      link.classList.add('text-white', 'bg-white/10')
+    }
+  })
+
+  mobileLinks.forEach(link => {
+    link.classList.remove('text-white', 'bg-white/10')
+    link.classList.add('text-gray-400')
+    if (link.href === currentUrl) {
+      link.classList.remove('text-gray-400')
+      link.classList.add('text-white', 'bg-white/10')
+    }
+  })
+})
