@@ -6,29 +6,11 @@
 (function () {
   'use strict';
 
-  // ===== Intro Loader (hanya berjalan 1x per sesi browser) =====
-  //
-  // Alur logika:
-  // 1. Halaman divisi (tanpa elemen #introLoader):
-  //    → Langsung set sessionStorage agar intro tidak muncul saat
-  //      pindah ke halaman beranda nanti.
-  //
-  // 2. Halaman beranda, SUDAH pernah dikunjungi (sessionStorage ada):
-  //    → Inline script di index.html sudah menyembunyikan loader
-  //      dengan display:none. Di sini kita hapus elemennya dari DOM.
-  //
-  // 3. Halaman beranda, PERTAMA KALI dikunjungi (sessionStorage kosong):
-  //    → Jalankan animasi liquid fill, lalu fade out.
-  //    → Simpan flag ke sessionStorage segera agar navigasi keluar
-  //      di tengah animasi tidak menyebabkan replay.
-  //
   function handleIntroLoader() {
     var loader = document.getElementById('introLoader');
     var alreadyPlayed = sessionStorage.getItem('mudeng_intro_played');
 
-    // --- Skenario 1: Tidak ada loader (halaman divisi) ---
     if (!loader) {
-      // Tandai sesi agar intro di beranda tidak muncul
       if (!alreadyPlayed) {
         sessionStorage.setItem('mudeng_intro_played', 'true');
       }
@@ -37,16 +19,10 @@
 
     // --- Skenario 2: Loader ada, tapi sudah pernah diputar ---
     if (alreadyPlayed) {
-      // Inline script sudah menyembunyikan via display:none,
-      // sekarang hapus dari DOM sepenuhnya
       loader.remove();
       return;
     }
 
-    // --- Skenario 3: Pertama kali — putar animasi intro ---
-    // Set flag SEGERA sebelum animasi selesai, supaya jika user
-    // menavigasi keluar saat animasi masih berjalan, intro
-    // tidak akan muncul lagi di kunjungan berikutnya
     sessionStorage.setItem('mudeng_intro_played', 'true');
 
     // Buat efek tetesan liquid
@@ -68,7 +44,7 @@
 
     setTimeout(createDrips, 600);
 
-    // Fade out setelah animasi selesai (~2.8 detik)
+    // Fade out setelah animasi selesai
     setTimeout(function () {
       loader.classList.add('fade-out');
       loader.addEventListener('transitionend', function () {
