@@ -115,29 +115,7 @@
     }
   };
 
-  // ===== Modal =====
-  window.openModal = function () {
-    var modal = document.getElementById('registrationModal');
-    if (!modal) return;
-    modal.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-    // Close mobile menu if open
-    if (window._isMobileMenuOpen && window._isMobileMenuOpen()) {
-      window._closeMobileMenu();
-    }
-  };
 
-  window.closeModal = function () {
-    var modal = document.getElementById('registrationModal');
-    if (!modal) return;
-    modal.classList.add('hidden');
-    document.body.style.overflow = '';
-  };
-
-  // Close modal on Escape key
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') window.closeModal();
-  });
 
   // ===== Scroll Animations (Intersection Observer) =====
   function initScrollAnimations() {
